@@ -1,5 +1,4 @@
 mp.log = function (string) { // Clientside -> Server log
-  mp.tty.push(JSON.stringify(string));
   if (!mp.log.queue[string]) {        // first time in last 250 ms?
     return mp.log.queue[string] = {   // queue it
       timeout: setTimeout(mp.log.process.bind({ string: string }), 250),
