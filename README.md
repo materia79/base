@@ -1,21 +1,23 @@
-# clientlogger
-Clientside debug utility merging duplicate messages saving nerves.
+# base resources
 For Rage Multiplayer (https://rage.mp)
 
-# Usage clientside
+# clientlogger
+Clientside debug utility merging duplicate messages saving nerves.
+
+Usage clientside:
 ```JS
 mp.log("Hello beast!");
 ```
 
-# Output on server console
+Output on server console:
 ```
 [WeirdNewbie(0)] Hello beast!
 ```
 
-# Example for merged duplicate messages
+## Example for merged duplicate messages:
 ![alt text](example.png)
 
-Clientside:
+Usage clientside:
 ```JS
 let func=() => {
    mp.log("test");
