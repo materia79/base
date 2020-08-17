@@ -7,4 +7,3 @@ const normal = sgrRgbFg(192, 192, 192) + sgrRgbBg(0, 0, 0);
 mp.events.add("log", (player, text) => {
   console.log(normal.concat("[", sgrRgbBg(0, 0, 0), player.name, sgrRgbFg(192, 192, 192), "(", player.id, ")", normal, "] ", text, normal));
 });
-console.log("[Log] clientLogger ready");
