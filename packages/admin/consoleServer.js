@@ -11,6 +11,7 @@ const rl = readline.createInterface({
 rl.historySize = 1000;
 
 rl.on('line', (command) => {
+  if (command == "") return;
   console.log("Command: " + command);
   let res = mp.tty.parseCommand(command);
   if (res != "") console.log("Command result: " + res);
@@ -114,7 +115,7 @@ mp.tty = {
   getConsoleTitle: () => {
     return mp.tty._GREY.concat(mp.tty.black,
       "[",
-      this.slashRotate[this.slashState],
+      mp.tty.slashRotate[mp.tty.slashState],
       "] ",
       mp.config.name,
       mp.tty.ddots,
