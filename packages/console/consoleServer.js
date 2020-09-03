@@ -32,7 +32,6 @@ if (fs.existsSync(".consoleHistory")) {
 }
 
 // Init mp.tty
-let chatFocus = 0;
 let lastCursorPos;
 let lastMeasureCPU = {};
 let window_width = process.stdout.columns;
@@ -145,7 +144,7 @@ mp.tty = {
       let commandModule = require("./commands/" + filename);
       mp.tty.commands[filename.slice(0, -3)] = commandModule.cmd;
       mp.tty.help += (typeof commandModule.help != "undefined" ? commandModule.help : ``);
-      console.log("Loaded command `" + filename.slice(0, -3) + "`");
+      //console.log("Loaded command `" + filename.slice(0, -3) + "`");
     });
   },
   parseCommand: (s) => {
