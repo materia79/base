@@ -1,6 +1,20 @@
 # base resources
 For Rage Multiplayer (https://rage.mp)
 
+Features:
+- Server
+   - Console prompt with commands and permanent history (requires 'readline')
+   - Customizable console status bar displaying uptime, load and more info
+   - Dynamic command system (check [packages/console/commands/README.md](packages/console/commands/README.md) for more info)
+   - Execute server side NodeJS code from console prompt (`r <code>`)
+   - Execute client side JavaScript code from console prompt (`crun <user id> <code>`)
+
+- Client
+   - Clientside debug command `mp.log(text)` to log and filter duplicate messages like render errors as example
+
+# console
+![alt text](example_base.png)
+
 # clientlogger
 Clientside debug utility merging duplicate messages saving nerves.
 
@@ -15,7 +29,7 @@ Output on server console:
 ```
 
 ## Example for merged duplicate messages:
-![alt text](example.png)
+![alt text](example_clientlogger.png)
 
 Usage clientside:
 ```JS
