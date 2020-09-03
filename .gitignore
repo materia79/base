@@ -9,9 +9,10 @@ client_packages/modules/*
 ragemp-server.exe
 BugTrap-x64.dll
 conf.json
-dotnet/
 bin/
+dotnet/
 maps/
+plugins/
 .consoleHistory
 server.log
 server.log.gz
@@ -20,7 +21,6 @@ server.log.gz.*
 # nodejs binary
 node_modules/
 .npmrc
-.editorconfig
 package-lock.json
 yarn-error.log
 yarn.lock
