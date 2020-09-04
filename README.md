@@ -1,5 +1,5 @@
 # base resources
-For Rage Multiplayer (https://rage.mp)
+For RAGE Multiplayer (https://rage.mp)
 
 Features:
 - Server
