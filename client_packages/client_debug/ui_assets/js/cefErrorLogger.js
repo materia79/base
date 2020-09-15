@@ -2,7 +2,7 @@ mp.log = (text) => {
   mp.trigger("log", text);
 };
 
-console.log._orig = console.log;
+console.log_orig = console.log;
 console.log = (text) => {
   mp.trigger("log", "[CEF(" + document.location.href.split('/').pop() + ")] " + text);
 };
