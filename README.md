@@ -5,17 +5,17 @@ Features:
 - Server
    - Console prompt with commands and permanent history (requires 'readline')
    - Customizable console status bar displaying uptime, load and more info
-   - Dynamic command system (check [packages/console/commands/README.md](packages/console/commands/README.md) for more info)
+   - Dynamic command system (check [packages/server_console/commands/README.md](packages/server_console/commands/README.md) for more info)
    - Execute server side NodeJS code from console prompt (`r <code>`)
    - Execute client side JavaScript code from console prompt (`crun <user id> <code>`)
 
 - Client
    - Clientside debug command `mp.log(text)` to log and filter duplicate messages like render errors as example
 
-# console
+# server_console
 ![alt text](example_base.png)
 
-# clientlogger
+# client_debug
 Clientside debug utility merging duplicate messages saving nerves.
 
 Usage clientside:

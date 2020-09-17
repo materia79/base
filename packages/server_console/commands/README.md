@@ -1,6 +1,6 @@
 ## Command template:
 
-Save this to `commands/<command name>.js`:
+Save this:
 
 ```js
 module.exports = {
@@ -8,9 +8,11 @@ module.exports = {
     // Here your command code
     return "Example result.";
   },
-  help: `    <command name> <options>  - description\n`
+  help: `    <command_name> <options>  - description\n`
 }
 ```
+
+to `packages/server_console/commands/<command_name>.js`.
 
 # Note: 
 
