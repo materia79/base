@@ -1,7 +1,7 @@
-# base resources
-For RAGE Multiplayer (https://rage.mp)
+# Base
+Base is a group of open sourced modules maintained by PUNK dev. team which aims to help server developers experience better quality development for their [RAGE Multiplayer](https://rage.mp) server.
 
-Features:
+## Features:
 - Server
    - Console prompt with commands and permanent history (requires 'readline')
    - Customizable console status bar displaying uptime, load and more info
@@ -12,10 +12,11 @@ Features:
 - Client
    - Clientside debug command `mp.log(text)` to log and filter duplicate messages like render errors as example
 
-# server_console
+# Modules
+## server_console
 ![alt text](example_base.png)
 
-# client_debug
+## client_debugging
 Clientside debug utility merging duplicate messages saving nerves.
 
 Usage clientside:
