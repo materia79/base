@@ -47,7 +47,7 @@ mp.tty = {
   esc: `\x1b`,
   sgrRgbFg: sgrRgbFg,
   sgrRgbBg: sgrRgbBg,
-  ddots: (" ").concat(sgrRgbFg(255, 0, 0), "::", sgrRgbFg(0, 0, 0), " "),
+  delimiter: (" ").concat(sgrRgbFg(255, 0, 0), "::", sgrRgbFg(0, 0, 0), " "),
   oneMiB: 1024 * 1024,
   slashRotate: { "1": "/", "2": "-", "3": "\\", "4": "|" },
   slashState: 1,
@@ -71,7 +71,7 @@ mp.tty = {
     mp.tty.slashState = (mp.tty.slashState == 4 ? 1 : mp.tty.slashState + 1);
   },
   cpuAverage: () => {
-    //Initialise sum of idle and time of cores and fetch CPU info
+    // Initialize sum of idle and time of cores and fetch CPU info
     var totalIdle = 0,
       totalTick = 0;
     var cpus = os.cpus();
@@ -80,18 +80,18 @@ mp.tty = {
       total: 1
     };
 
-    //Loop through CPU cores
+    // Loop through CPU cores
     for (var i = 0, len = cpus.length; i < len; i++) {
 
-      //Select CPU core
+      // Select CPU core
       var cpu = cpus[i];
 
-      //Total up the time in the cores tick
+      // Total up the time in the cores tick
       for (type in cpu.times) {
         totalTick += cpu.times[type];
       }
 
-      //Total up the idle time of the core
+      // Total up the idle time of the core
       totalIdle += cpu.times.idle;
     }
 
@@ -112,30 +112,23 @@ mp.tty = {
     if (mem) return Math.floor((mem.heapUsed / mp.tty.oneMiB) * 100) / 100 + " MiB";
     else return "unk";
   },
-  getConsoleTitle: () => {
-    return mp.tty._GREY.concat(mp.tty.black,
-      "[",
-      mp.tty.slashRotate[mp.tty.slashState],
-      "] ",
-      mp.config.name,
-      mp.tty.ddots,
-      mp.players.length,
-      (mp.players.length != 1 ? " beasts" : " beast"),
-      mp.tty.ddots,
-      mp.vehicles.length,
-      " rides",
-      mp.tty.ddots,
-      "uptime ",
-      (mp.tty.uptime),
-      mp.tty.ddots,
-      "CPU: ",
-      mp.tty.getCPUUsage(),
-      " %",
-      mp.tty.ddots,
-      "Mem: ",
-      mp.tty.getMemUsage(),
-      " ", mp.tty.normal
-    );
+  getConsoleTitle: () => { return ""; },
+  consoleTitleFuncs: [
+    `"[", mp.tty.slashRotate[mp.tty.slashState], "] "`,
+    `mp.config.name`,
+    `mp.players.length, (mp.players.length != 1 ? " players" : " player")`,
+    `mp.vehicles.length, " vehicles"`
+  ],
+  addConsoleTitle: (codeExpression) => {
+    let result = `return mp.tty.consoleTitleBgColor.concat(mp.tty.consoleTitleFgColor`;
+    let i = 0;
+    mp.tty.consoleTitleFuncs.push(codeExpression);
+    mp.tty.consoleTitleFuncs.forEach((titleFunc) => {
+      result = result.concat((i < 2 ? `, ` : `, mp.tty.delimiter,`), titleFunc);
+      i += 1;
+    });
+    result = result.concat(`, mp.tty.delimiter,"uptime ", (mp.tty.uptime), mp.tty.delimiter, "CPU: ", mp.tty.getCPUUsage(), " %", mp.tty.delimiter, "Mem: ", mp.tty.getMemUsage(), " ", mp.tty.normal);`);
+    mp.tty.getConsoleTitle = new Function(result);
   },
   commands: {},
   help: `Available commands:\n`,
@@ -157,6 +150,8 @@ mp.tty = {
     if (mp.tty.commands[cmd]) return mp.tty.commands[cmd](args);
     return "Unknown command `" + cmd + "` Try `help`.";
   },
+  consoleTitleFgColor: sgrRgbFg(0, 0, 0),
+  consoleTitleBgColor: sgrRgbBg(192, 192, 192),
   rgb: sgrRgbFg,
   RGB: sgrRgbBg,
   normal: sgrRgbFg(192, 192, 192).concat(sgrRgbBg(0, 0, 0)),
