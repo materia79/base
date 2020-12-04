@@ -63,7 +63,7 @@ mp.tty = {
       mp.tty.uptime += "h";
     }
     readline.moveCursor(rl.output, -window_width, -window_height);
-    process.stdout.write(mp.tty.grey.concat(whiteSpace.repeat(window_width), "\n"));
+    process.stdout.write(mp.tty.normal.concat(whiteSpace.repeat(window_width), "\n"));
     readline.moveCursor(rl.output, 0, -1);
     // Print title line
     process.stdout.write(mp.tty.getConsoleTitle().concat("\n"));
@@ -154,7 +154,7 @@ mp.tty = {
   consoleTitleBgColor: sgrRgbBg(192, 192, 192),
   rgb: sgrRgbFg,
   RGB: sgrRgbBg,
-  normal: sgrRgbFg(192, 192, 192).concat(sgrRgbBg(0, 0, 0)),
+  normal: sgr(0), //sgrRgbFg(192, 192, 192).concat(sgrRgbBg(0, 0, 0)),
   red: sgrRgbFg(192, 0, 0),
   yellow: sgrRgbFg(192, 192, 0),
   black: sgrRgbFg(0, 0, 0),
