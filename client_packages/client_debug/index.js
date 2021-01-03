@@ -18,15 +18,19 @@ mp.log = function (string) {          // Clientside -> Server log
   }
 }
 mp.log.process = function () {
-  if (mp.log.queue[this.string]) {            // if the timeout called process or the maximum supression time exceed
-    if (mp.log.queue[this.string].dup > 1) {  // multiple events
-      mp.events.callRemote('log', this.string + " [ " + mp.log.queue[this.string].dup + " x DUP ]");
-    } else {                                  // only one event
+  try {
+    if (mp.log.queue[this.string]) {            // if the timeout called process or the maximum supression time exceed
+      if (mp.log.queue[this.string].dup > 1) {  // multiple events
+        mp.events.callRemote('log', this.string + " [ " + mp.log.queue[this.string].dup + " x DUP ]");
+      } else {                                  // only one event
+        mp.events.callRemote('log', this.string);
+      }
+      delete mp.log.queue[this.string];         // in any case this line was output now
+    } else {                                    // timeout didnt called process
       mp.events.callRemote('log', this.string);
     }
-    delete mp.log.queue[this.string];         // in any case this line was output now
-  } else {                                    // timeout didnt called process
-    mp.events.callRemote('log', this.string);
+  } catch (error) {
+    console.log("[mp.log] Error: " + error); // happens if had logged something that was part of a multiplayer object.
   }
 }
 mp.log.queue = {};
