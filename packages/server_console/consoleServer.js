@@ -132,13 +132,24 @@ mp.tty = {
   },
   commands: {},
   help: `Available commands:\n`,
-  loadCommands: () => {
+  init: () => {
+    // Load commands
     fs.readdirSync(__dirname + "/commands").filter(fn => fn.endsWith(".js")).forEach((filename) => {
       let commandModule = require("./commands/" + filename);
       mp.tty.commands[filename.slice(0, -3)] = commandModule.cmd;
       mp.tty.help += (typeof commandModule.help != "undefined" ? commandModule.help : ``);
       //console.log("Loaded command `" + filename.slice(0, -3) + "`");
     });
+
+    // Generate initial console title
+    let result = `return mp.tty.consoleTitleBgColor.concat(mp.tty.consoleTitleFgColor`;
+    let i = 0;
+    mp.tty.consoleTitleFuncs.forEach((titleFunc) => {
+      result = result.concat((i < 2 ? `, ` : `, mp.tty.delimiter,`), titleFunc);
+      i += 1;
+    });
+    result = result.concat(`, mp.tty.delimiter,"uptime ", (mp.tty.uptime), mp.tty.delimiter, "CPU: ", mp.tty.getCPUUsage(), " %", mp.tty.delimiter, "Mem: ", mp.tty.getMemUsage(), " ", mp.tty.normal);`);
+    mp.tty.getConsoleTitle = new Function(result);
   },
   parseCommand: (s) => {
     let args = s.split(" ");
@@ -173,7 +184,7 @@ mp.tty = {
 };
 
 // Load serverside console commands
-mp.tty.loadCommands();
+mp.tty.init();
 
 // Start updating info row
 setInterval(mp.tty.drawConsole, mp.tty.updateInterval);
