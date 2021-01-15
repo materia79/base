@@ -7,9 +7,9 @@ module.exports = {
     try {
       let f = new Function(commandLine);
       let result = f();
-      return "Return value: ".concat(result);
+      return typeof result != "undefined" ? "[Run] return value: ".concat(result) : undefined;
     } catch (error) {
-      console.log("[Run] Error in serverside script: " + error.stack);
+      console.log("[Run] " + error);
       return;
     }
   },
