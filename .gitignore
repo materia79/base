@@ -1,10 +1,13 @@
 # client
 .listcache
 
+# fastdl
+fastdl_snapshot
+fastdl_snapshot/*
+
 # modules
 client_packages/.gitignore
-client_packages/modules/*
-!client_packages/modules/README.md
+client_packages/modulesIndex.js
 modules/*
 !modules/README.md
 

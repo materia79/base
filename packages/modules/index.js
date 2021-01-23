@@ -4,7 +4,7 @@ const crypto = require("crypto");
 
 // Modules need to be included seperately here per resource folder
 // and generate a client index for them as well start then serverside if not disabled.
-const folder_client_packages = path.join(".", "/", "client_packages", "/");
+const folder_client_packages = path.join("client_packages", "/");
 
 function checksumFile(hashName, path) {
   return new Promise((resolve, reject) => {

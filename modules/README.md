@@ -19,3 +19,13 @@ git submodule update --init --recursive
 ```sh
 git config --global submodule.recurse true
 ```
+
+# `client_packages/modulesIndex.js` is updated by `packages/modules/index.js`
+
+To automatically start all client package modules simply add
+
+```js
+require("./modules/modulesIndex.js");
+```
+
+to your `client_packages/index.js`. Done!
