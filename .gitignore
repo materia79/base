@@ -2,10 +2,14 @@
 .listcache
 
 # modules
+client_packages/.gitignore
 client_packages/modules/*
 !client_packages/modules/README.md
+modules/*
+!modules/README.md
 
 # server binary
+ragemp-server
 ragemp-server.exe
 BugTrap-x64.dll
 conf.json
