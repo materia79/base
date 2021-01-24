@@ -124,14 +124,13 @@ mp.modules = {
     fs.writeFileSync(path.join(folder_client_packages, "modules", "/", "modulesIndex.js"), moduleClientIndex);
     fs.writeFileSync(path.join(folder_client_packages, "/", ".gitignore"), moduleClientGitIgnore);
 
-    if (mp.events.delayEvent) mp.events.finishedInit("loading_modules");
-
     if (restartNeeded) {
       console.log("[Modules] CLIENT FILES CHANGED! PLEASE RESTART THE SERVER!");
       setTimeout(() => {
         process.exit();
       }, 3000);
     } else {
+      if (mp.events.delayEvent) mp.events.finishedInit("loading_modules");
       console.log("[Modules] All client files okay!");
     }
   }
