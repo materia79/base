@@ -19,7 +19,6 @@ function checksumFile(hashName, path) {
 mp.modules = {
   loaded: false,
   disabled: {
-    "jukebox": true
   },
   getDirTree: function (dir, recursive = false, dirList = [], fileList = []) {
     const files = fs.readdirSync(dir);
@@ -116,13 +115,15 @@ mp.modules = {
         }
       };
     };
+    /*
     if (!fs.existsSync(path.join(folder_client_packages, "modules"))) {
       console.log("[Modules] Creating subdirectory `client_packages/modules`...");
       fs.mkdirSync(path.join(folder_client_packages, "modules"));
       restartNeeded = true;
     }
-    fs.writeFileSync(path.join(folder_client_packages, "modules", "/", "modulesIndex.js"), moduleClientIndex);
-    fs.writeFileSync(path.join(folder_client_packages, "/", ".gitignore"), moduleClientGitIgnore);
+    */
+    fs.writeFileSync(path.join(folder_client_packages, "modulesIndex.js"), moduleClientIndex);
+    fs.writeFileSync(path.join(folder_client_packages, ".gitignore"), moduleClientGitIgnore);
 
     if (restartNeeded) {
       console.log("[Modules] CLIENT FILES CHANGED! PLEASE RESTART THE SERVER!");
