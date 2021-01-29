@@ -1,5 +1,3 @@
-require("clientLogger/index.js");
-require("console/index.js");
-
-// Activate to start modules clientside
-// require("modulesIndex.js");
+require("client_debug/index.js");
+require("server_console/index.js");
+require("modulesIndex.js");
