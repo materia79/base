@@ -63,7 +63,7 @@ mp.modules = {
       }
 
       let moduleClientRoot = path.join(directory.full, folder_client_packages);
-      let clientModules = mp.modules.getDirTree(moduleClientRoot, true);
+      let clientModules = fs.existsSync(moduleClientRoot) ? mp.modules.getDirTree(moduleClientRoot, true) : {dirs:[], files:[]};
 
       // check module directories
       for (let j = 0; j < clientModules.dirs.length; j++) {
