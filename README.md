@@ -1,5 +1,7 @@
 # Base
-Base is a group of open sourced modules maintained by PUNK dev. team which aims to help server developers experience better quality development for their [RAGE Multiplayer](https://rage.mp) server.
+Base is a set of resources and tools with active server console for debugging Rage Multiplayer NodeJS server projects.
+
+This resource is created and maintained by the [Project Unknown](https://discord.gg/FbVcFQj) team and requires [RAGE Multiplayer v1.1](https://rage.mp/).
 
 ## Features:
 - Server
