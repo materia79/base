@@ -19,6 +19,10 @@ rl.on('line', (command) => {
   fs.writeFileSync(".consoleHistory", JSON.stringify(rl.history));
 });
 
+rl.on('SIGINT', () => {
+  process.exit();
+});
+
 // Init console history
 if (fs.existsSync(".consoleHistory")) {
   try {
