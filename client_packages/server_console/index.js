@@ -2,18 +2,24 @@ const
   esc = `\x1b`,
   sgr = (...args) => `${esc}[${args.join(';')}m`,
   sgrRgbFg = (...args) => sgr(`38;2;${args.join(';')}`),
-  sgrRgbBg = (...args) => sgr(`48;2;${args.join(';')}`),
-  tty = mp.tty = {
-    sgrRgbFg: sgrRgbFg,
-    sgrRgbBg: sgrRgbBg,
-    WARNING: sgrRgbBg(192, 0, 0) + sgrRgbFg(0, 0, 0),
-    normal: sgr(0),
-    red: sgrRgbFg(192, 0, 0),
-    yellow: sgrRgbFg(192, 192, 0),
-    YELLOW: sgrRgbBg(192, 192, 0),
-    black: sgrRgbFg(0, 0, 0),
-    green: sgrRgbFg(0, 192, 0)
-  };
+  sgrRgbBg = (...args) => sgr(`48;2;${args.join(';')}`);
+
+mp.tty = {
+  sgrRgbFg: sgrRgbFg,
+  sgrRgbBg: sgrRgbBg,
+  normal: sgr(0),
+  red: sgrRgbFg(192, 0, 0),
+  yellow: sgrRgbFg(192, 192, 0),
+  YELLOW: sgrRgbBg(192, 192, 0),
+  black: sgrRgbFg(0, 0, 0),
+  BLACK: sgrRgbBg(0, 0, 0),
+  green: sgrRgbFg(0, 192, 0),
+  grey: sgrRgbFg(192, 192, 192),
+  GREY: sgrRgbBg(192, 192, 192),
+  MARINA: sgrRgbBg(32, 64, 128),
+  white: sgrRgbFg(255, 255, 255),
+  WARNING: sgrRgbBg(192, 0, 0) + sgrRgbFg(0, 0, 0)
+};
 
 const
   AsyncFunction = Object.getPrototypeOf(async function () { }).constructor,
