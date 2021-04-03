@@ -12,7 +12,7 @@ function getPlayerInfo(player) {
     " (",
     player.getVariable("country"),
     ") | ",
-    player.ping,
+    player.latency,
     " | ",
     player.socialClub,
     " | ",
@@ -23,7 +23,7 @@ function getPlayerInfo(player) {
 
 module.exports = {
   cmd: (args) => {
-    let res = ``;
+    let res = `Player ` + (args.length == 2 ? "found" : "connected") + `:\n`;
 
     if (args.length == 2) {
       let playerFromId = mp.players.at(parseInt(args[1]));
