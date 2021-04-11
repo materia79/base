@@ -191,4 +191,4 @@ mp.tty = {
 mp.tty.init();
 
 // Start updating info row
-setInterval(mp.tty.drawConsole, mp.tty.updateInterval);
+mp.tty.interval = setInterval(mp.tty.drawConsole, mp.tty.updateInterval);
