@@ -1,7 +1,9 @@
 const
   fs = require("fs"),
   os = require("os"),
-  readline = require('readline');
+  readline = require('readline'),
+  wait = (ms) => new Promise(resolve => setTimeout(resolve, ms||0));
+const { waitForDebugger } = require("inspector");
 
 // Init readline
 const rl = readline.createInterface({
@@ -193,4 +195,7 @@ mp.tty = {
 mp.tty.init();
 
 // Start updating info row
-if(!mp.config.tty || !mp.config.tty.hideTitle) mp.tty.interval = setInterval(mp.tty.drawConsole, mp.tty.updateInterval);
+if (!mp.config.tty || !mp.config.tty.hideTitle) (async () => {
+  while (mp.events.delayInitialization) await wait(100);
+  mp.tty.interval = setInterval(mp.tty.drawConsole, mp.tty.updateInterval);
+})();
