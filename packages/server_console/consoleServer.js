@@ -1,8 +1,9 @@
-const fs = require("fs");
-const os = require("os");
+const
+  fs = require("fs"),
+  os = require("os"),
+  readline = require('readline');
 
 // Init readline
-const readline = require('readline');
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
@@ -15,7 +16,7 @@ rl.on('line', (command) => {
   console.log("Command: " + command);
   let res = mp.tty.parseCommand(command);
   if (typeof res != "undefined" && res != "") console.log(res);
-  mp.tty.drawConsole();
+  if (mp.tty.interval) mp.tty.drawConsole();
   fs.writeFileSync(".consoleHistory", JSON.stringify(rl.history));
 });
 
@@ -47,6 +48,7 @@ const sgrRgbFg = (...args) => sgr(`38;2;${args.join(';')}`);
 const sgrRgbBg = (...args) => sgr(`48;2;${args.join(';')}`);
 
 mp.tty = {
+  //blessed: blessed,
   updateInterval: 999,
   esc: `\x1b`,
   sgrRgbFg: sgrRgbFg,
@@ -191,4 +193,4 @@ mp.tty = {
 mp.tty.init();
 
 // Start updating info row
-mp.tty.interval = setInterval(mp.tty.drawConsole, mp.tty.updateInterval);
+if(!mp.config.tty || !mp.config.tty.hideTitle) mp.tty.interval = setInterval(mp.tty.drawConsole, mp.tty.updateInterval);
