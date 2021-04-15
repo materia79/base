@@ -26,7 +26,7 @@ class Logger {
     this.inject()
   }
 
-  _log(message) {
+  _log(message, isInfo, args) {
     const now = new Date();
     let timestamp = ""
       .concat(now.getUTCFullYear())
@@ -52,7 +52,12 @@ class Logger {
       appendFile("server.log", timestamp + " " + message + "\n", function (error) {
         if (error) return console._original.log("[LOG] server.log error! " + error);
       });
-      console._original.log("\r" + timestamp + " " + message)
+
+      if (isInfo && args) {
+        console._original.info("\r" + timestamp + " " + message, ...args)
+      } else {
+        console._original.log("\r" + timestamp + " " + message)
+      }
     }
     //console._original.log("\r("+messagesPerSecond+") " + timestamp + " " + message)
   }
@@ -75,8 +80,8 @@ class Logger {
     this._log(`${normal}${message}`);
   }
 
-  info(message) {
-    this._log(`${sgrRgbFg(0, 255, 0)}[INFO] ${normal}${message}`)
+  info(...args) {
+    this._log(`${sgrRgbFg(0, 255, 0)}[INFO]${normal}`, true, ...args)
   }
 
   warn(message) {
