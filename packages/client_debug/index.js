@@ -49,7 +49,7 @@ class Logger {
       mp.log.messagesPerSecond = Math.ceil(mp.log.messagesPerSecond / 2)
     };
     if (mp.log.messagesPerSecond < 500) {
-      appendFile("server.log", timestamp + " " + message + "\n", function (error) {
+      appendFile("server.log", timestamp + " " + (message).replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, "") + "\n", function (error) {
         if (error) return console._original.log("[LOG] server.log error! " + error);
       });
 
