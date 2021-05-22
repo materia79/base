@@ -13,7 +13,11 @@ class EventMerger {
         if (this.queue && this.queue[id]) {
           const queue = this.queue[id];
           queue.dup++;
-          if (typeof arguments[1] == "number") queue.stack += arguments[1];
+          if (typeof arguments[1] == "number") {
+            queue.stack += arguments[1];
+            arguments[1] = queue.stack;
+            queue.args = Array.from(arguments);
+          }
           if (queue.start + this.maxBufferTimeMs < new Date().getTime()) {
             clearTimeout(queue.timeout);
             queue.handler.bind({ queue: queue })(...queue.args);
@@ -50,7 +54,7 @@ class EventMerger {
 mp.events.EventMerger = EventMerger;
 /*
 func = function () { mp.events.callRemote("log", "handle: " + arguments[0] + " total damage: " + this.queue.stack); };
-test = new EventMerger(func, 1000, 5000);
+test = new mp.events.EventMerger(func, 1000, 5000);
 test.add(12345, 10);
 test.add(12345, 10);
 */
