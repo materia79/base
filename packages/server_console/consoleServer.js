@@ -3,7 +3,7 @@ const
   os = require("os"),
   readline = require('readline'),
   wait = (ms) => new Promise(resolve => setTimeout(resolve, ms||0));
-const { waitForDebugger } = require("inspector");
+const _write = process.stdout.write.bind(process.stdout);
 
 // Init readline
 const rl = readline.createInterface({
@@ -16,9 +16,9 @@ rl.historySize = 1000;
 rl.on('line', (command) => {
   if (command == "") return;
   console.log("Command: " + command);
-  let res = mp.tty.parseCommand(command);
+  let res = tty.parseCommand(command);
   if (typeof res != "undefined" && res != "") console.log(res);
-  if (mp.tty.interval) mp.tty.drawConsole();
+  if (tty.interval) tty.drawConsole();
   fs.writeFileSync(".consoleHistory", JSON.stringify(rl.history));
 });
 
@@ -39,18 +39,17 @@ if (fs.existsSync(".consoleHistory")) {
 }
 
 // Init mp.tty
-let lastCursorPos;
-let lastMeasureCPU = {};
-let window_width = process.stdout.columns;
-let window_height = process.stdout.rows;
-let whiteSpace = " ";
-
+const whiteSpace = " ";
 const sgr = (...args) => `\x1b[${args.join(';')}m`;
 const sgrRgbFg = (...args) => sgr(`38;2;${args.join(';')}`);
 const sgrRgbBg = (...args) => sgr(`48;2;${args.join(';')}`);
 
-mp.tty = {
+const tty = mp.tty = {
   //blessed: blessed,
+  lastCursorPos: 0,
+  lastMeasureCPU: {},
+  window_width: process.stdout.columns,
+  window_height: process.stdout.rows,
   updateInterval: 999,
   esc: `\x1b`,
   sgrRgbFg: sgrRgbFg,
@@ -61,43 +60,44 @@ mp.tty = {
   slashState: 1,
   chatFocus: 0,
   drawConsole: () => {
-    window_width = process.stdout.columns;
-    window_height = process.stdout.rows;
-    lastCursorPos = rl._getCursorPos().cols;
-    mp.tty.uptime = Math.floor(process.uptime() / 36) / 100;
-    if (mp.tty.uptime >= 24) {
-      mp.tty.uptime = (Math.floor(mp.tty.uptime / 0.24) / 100).toString().concat("d");
+    tty.window_width = process.stdout.columns;
+    tty.window_height = process.stdout.rows;
+    tty.lastCursorPos = rl._getCursorPos().cols;
+    tty.uptime = Math.floor(process.uptime() / 36) / 100;
+    if (tty.uptime >= 24) {
+      tty.uptime = (Math.floor(tty.uptime / 0.24) / 100).toString().concat("d");
     } else {
-      mp.tty.uptime += "h";
+      tty.uptime += "h";
     }
-    readline.moveCursor(rl.output, -window_width, -window_height);
-    process.stdout.write(mp.tty.normal.concat(whiteSpace.repeat(window_width), "\n"));
+    readline.moveCursor(rl.output, -tty.window_width, -tty.window_height);
+    _write(tty.normal.concat(whiteSpace.repeat(tty.window_width), "\n"));
     readline.moveCursor(rl.output, 0, -1);
     // Print title line
-    process.stdout.write(mp.tty.getConsoleTitle().concat("\n"));
-    readline.moveCursor(rl.output, lastCursorPos, window_height - 1);
-    mp.tty.slashState = (mp.tty.slashState == 4 ? 1 : mp.tty.slashState + 1);
+    _write(tty.getConsoleTitle().concat("\n"));
+    readline.moveCursor(rl.output, tty.lastCursorPos, tty.window_height - 1);
+    tty.slashState = (tty.slashState == 4 ? 1 : tty.slashState + 1);
   },
   cpuAverage: () => {
     // Initialize sum of idle and time of cores and fetch CPU info
-    var totalIdle = 0,
+    let
+      totalIdle = 0,
       totalTick = 0;
-    var cpus = os.cpus();
-    if (!cpus) return {
-      idle: 1,
-      total: 1
-    };
+    
+    const cpus = os.cpus();
+    
+    if (!cpus) return { idle: 1, total: 1 };
 
     // Loop through CPU cores
-    for (var i = 0, len = cpus.length; i < len; i++) {
+    let i;
+    for (i = 0, len = cpus.length; i < len; i++) {
 
       // Select CPU core
-      var cpu = cpus[i];
+      const cpu = cpus[i];
 
       // Total up the time in the cores tick
-      for (type in cpu.times) {
+      let type;
+      for (type in cpu.times) 
         totalTick += cpu.times[type];
-      }
 
       // Total up the idle time of the core
       totalIdle += cpu.times.idle;
@@ -110,63 +110,68 @@ mp.tty = {
     };
   },
   getCPUUsage: function () {
-    let lastStart = lastMeasureCPU;
-    let endMeasure = mp.tty.cpuAverage();
-    lastMeasureCPU = mp.tty.cpuAverage();
+    const
+      lastStart = tty.lastMeasureCPU,
+      endMeasure = tty.cpuAverage();
+    
+    tty.lastMeasureCPU = tty.cpuAverage();
     return 100 - ~~(100 * (endMeasure.idle - lastStart.idle) / (endMeasure.total - lastStart.total));
   },
   getMemUsage: function () {
-    var mem = process.memoryUsage();
-    if (mem) return Math.floor((mem.heapUsed / mp.tty.oneMiB) * 100) / 100 + " MiB";
+    const mem = process.memoryUsage();
+    if (mem) return Math.floor((mem.heapUsed / tty.oneMiB) * 100) / 100 + " MiB";
     else return "unk";
   },
   getConsoleTitle: () => { return ""; },
-  consoleTitleFuncs: [
+  consoleTitleHeader: [
     `"[", mp.tty.slashRotate[mp.tty.slashState], "] "`,
     `mp.config.name`,
     `mp.players.length, (mp.players.length != 1 ? " players" : " player")`,
-    `mp.vehicles.length, " vehicles"`
+    `mp.vehicles.length, " veh"`
   ],
+  consoleTitleFooter: `, mp.tty.delimiter, "up: ", (mp.tty.uptime), mp.tty.delimiter, "CPU: ", mp.tty.getCPUUsage(), " %", mp.tty.delimiter, "Mem: ", mp.tty.getMemUsage(), " ", mp.tty.normal);`,
   addConsoleTitle: (codeExpression) => {
-    let result = `return mp.tty.consoleTitleBgColor.concat(mp.tty.consoleTitleFgColor`;
-    let i = 0;
-    mp.tty.consoleTitleFuncs.push(codeExpression);
-    mp.tty.consoleTitleFuncs.forEach((titleFunc) => {
+    let
+      result = `return mp.tty.consoleTitleBgColor.concat(mp.tty.consoleTitleFgColor`,
+      i = 0;
+    tty.consoleTitleHeader.push(codeExpression);
+    tty.consoleTitleHeader.forEach((titleFunc) => {
       result = result.concat((i < 2 ? `, ` : `, mp.tty.delimiter,`), titleFunc);
       i += 1;
     });
-    result = result.concat(`, mp.tty.delimiter,"uptime ", (mp.tty.uptime), mp.tty.delimiter, "CPU: ", mp.tty.getCPUUsage(), " %", mp.tty.delimiter, "Mem: ", mp.tty.getMemUsage(), " ", mp.tty.normal);`);
-    mp.tty.getConsoleTitle = new Function(result);
+    result = result.concat(tty.consoleTitleFooter);
+    tty.getConsoleTitle = new Function(result);
   },
   commands: {},
   help: `Available commands:\n`,
   init: () => {
     // Load commands
     fs.readdirSync(__dirname + "/commands").filter(fn => fn.endsWith(".js")).forEach((filename) => {
-      let commandModule = require("./commands/" + filename);
-      mp.tty.commands[filename.slice(0, -3)] = commandModule.cmd;
-      mp.tty.help += (typeof commandModule.help != "undefined" ? commandModule.help : ``);
+      const commandModule = require("./commands/" + filename);
+      tty.commands[filename.slice(0, -3)] = commandModule.cmd;
+      tty.help += (typeof commandModule.help != "undefined" ? commandModule.help : ``);
       //console.log("Loaded command `" + filename.slice(0, -3) + "`");
     });
 
     // Generate initial console title
     let result = `return mp.tty.consoleTitleBgColor.concat(mp.tty.consoleTitleFgColor`;
     let i = 0;
-    mp.tty.consoleTitleFuncs.forEach((titleFunc) => {
+    tty.consoleTitleHeader.forEach((titleFunc) => {
       result = result.concat((i < 2 ? `, ` : `, mp.tty.delimiter,`), titleFunc);
       i += 1;
     });
-    result = result.concat(`, mp.tty.delimiter,"uptime ", (mp.tty.uptime), mp.tty.delimiter, "CPU: ", mp.tty.getCPUUsage(), " %", mp.tty.delimiter, "Mem: ", mp.tty.getMemUsage(), " ", mp.tty.normal);`);
-    mp.tty.getConsoleTitle = new Function(result);
+    result = result.concat(tty.consoleTitleFooter);
+    tty.getConsoleTitle = new Function(result);
   },
-  parseCommand: (s) => {
-    let args = s.split(" ");
-    let cmd = args[0].toLowerCase();
+  parseCommand: (string) => {
+    const
+      args = string.split(" "),
+      cmd = args[0].toLowerCase();
 
-    window_width = process.stdout.columns;
-    window_height = process.stdout.rows;
+    tty.window_width = process.stdout.columns;
+    tty.window_height = process.stdout.rows;
 
-    if (mp.tty.commands[cmd]) return mp.tty.commands[cmd](args);
+    if (tty.commands[cmd]) return tty.commands[cmd](args);
     return "Unknown command `" + cmd + "` Try `help`.";
   },
   consoleTitleFgColor: sgrRgbFg(0, 0, 0),
@@ -192,10 +197,10 @@ mp.tty = {
 };
 
 // Load serverside console commands
-mp.tty.init();
+tty.init();
 
 // Start updating info row
 if (!mp.config.tty || !mp.config.tty.hideTitle) (async () => {
   while (mp.events.delayInitialization) await wait(100);
-  mp.tty.interval = setInterval(mp.tty.drawConsole, mp.tty.updateInterval);
+  tty.interval = setInterval(tty.drawConsole, tty.updateInterval);
 })();

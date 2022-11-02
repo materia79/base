@@ -101,14 +101,12 @@ class Logger {
       return 'Logger already injected!'
     }
 
-    let original = {
+    console._original = {
       log: console.log,
       info: console.info,
       error: console.error,
       debug: console.debug
     }
-
-    console._original = original
 
     console.log = this._wrap(this.log)
     console.info = this._wrap(this.info);
