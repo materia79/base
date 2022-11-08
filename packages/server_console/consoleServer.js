@@ -2,7 +2,7 @@ const
   fs = require("fs"),
   os = require("os"),
   readline = require('readline'),
-  wait = (ms) => new Promise(resolve => setTimeout(resolve, ms||0));
+  wait = (ms) => new Promise(resolve => setTimeout(resolve, ms || 0));
 const _write = process.stdout.write.bind(process.stdout);
 
 // Init readline
@@ -27,7 +27,7 @@ rl.on('SIGINT', () => {
 });
 
 // Init console history
-if (fs.existsSync(".consoleHistory")) {
+if (fs.existsSync("./.consoleHistory")) {
   try {
     rl.history = JSON.parse(fs.readFileSync(".consoleHistory"));
   } catch (error) {
@@ -35,7 +35,7 @@ if (fs.existsSync(".consoleHistory")) {
     rl.history = [];
   }
 } else {
-  fs.writeFileSync(".consoleHistory", JSON.stringify(rl.history));
+  fs.writeFileSync("./.consoleHistory", JSON.stringify(rl.history || []));
 }
 
 // Init mp.tty
@@ -82,9 +82,9 @@ const tty = mp.tty = {
     let
       totalIdle = 0,
       totalTick = 0;
-    
+
     const cpus = os.cpus();
-    
+
     if (!cpus) return { idle: 1, total: 1 };
 
     // Loop through CPU cores
@@ -96,7 +96,7 @@ const tty = mp.tty = {
 
       // Total up the time in the cores tick
       let type;
-      for (type in cpu.times) 
+      for (type in cpu.times)
         totalTick += cpu.times[type];
 
       // Total up the idle time of the core
@@ -113,7 +113,7 @@ const tty = mp.tty = {
     const
       lastStart = tty.lastMeasureCPU,
       endMeasure = tty.cpuAverage();
-    
+
     tty.lastMeasureCPU = tty.cpuAverage();
     return 100 - ~~(100 * (endMeasure.idle - lastStart.idle) / (endMeasure.total - lastStart.total));
   },
