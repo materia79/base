@@ -13,10 +13,10 @@ const rl = readline.createInterface({
 
 rl.historySize = 1000;
 
-rl.on('line', (command) => {
+rl.on('line', async (command) => {
   if (command == "") return;
   console.log("Command: " + command);
-  let res = tty.parseCommand(command);
+  let res = await tty.parseCommand(command);
   if (typeof res != "undefined" && res != "") console.log(res);
   if (tty.interval) tty.drawConsole();
   fs.writeFileSync(".consoleHistory", JSON.stringify(rl.history));
@@ -163,7 +163,7 @@ const tty = mp.tty = {
     result = result.concat(tty.consoleTitleFooter);
     tty.getConsoleTitle = new Function(result);
   },
-  parseCommand: (string) => {
+  parseCommand: async (string) => {
     const
       args = string.split(" "),
       cmd = args[0].toLowerCase();
@@ -171,8 +171,9 @@ const tty = mp.tty = {
     tty.window_width = process.stdout.columns;
     tty.window_height = process.stdout.rows;
 
-    if (tty.commands[cmd]) return tty.commands[cmd](args);
-    return "Unknown command `" + cmd + "` Try `help`.";
+    if (!tty.commands[cmd]) return "Unknown command `" + cmd + "` Try `help`.";
+    if (tty.commands[cmd].constructor.name === "AsyncFunction") return await tty.commands[cmd](args);
+    else return tty.commands[cmd](args);
   },
   consoleTitleFgColor: sgrRgbFg(0, 0, 0),
   consoleTitleBgColor: sgrRgbBg(192, 192, 192),
