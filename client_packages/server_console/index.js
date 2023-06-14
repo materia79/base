@@ -56,10 +56,12 @@ mp.events.add("crun", async (code) => {
   mp.log("[crun" + (isAsync ? "(async)" : "") + "] " + code);
 
   if (isAsync) {
-    const evalFunc = new AsyncFunction('a', getAsyncScript(code));
-    await evalFunc();
+    //const evalFunc = new AsyncFunction('a', getAsyncScript(code));
+    eval(getAsyncScript(code));
+    //await evalFunc();
   } else {
-    const evalFunc = new Function(getScript(code));
-    evalFunc();
+    //const evalFunc = new Function(getScript(code));
+    eval(getScript(code));
+    //evalFunc();
   }
 });
