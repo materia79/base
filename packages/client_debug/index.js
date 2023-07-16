@@ -42,7 +42,7 @@ class Logger {
       .concat((now.getUTCSeconds() < 10 ? "0" + now.getUTCSeconds() : now.getUTCSeconds()))
       .concat(" (")
       .concat(((now.getTime() - mp.events.serverStartupTime) / 10 / 100).toFixed(2))
-      .concat(") ");
+      .concat(")");
     mp.log.messagesPerSecond += 1;
     if (mp.log.messagesPerSecondUpdate + 1000 < Date.now()) {
       mp.log.messagesPerSecondUpdate = Date.now();
