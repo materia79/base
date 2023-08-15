@@ -1,7 +1,7 @@
 # Base
 Base is a set of resources and tools with active server console for debugging Rage Multiplayer NodeJS server projects.
 
-This resource is created and maintained by the [Project Unknown](https://discord.gg/FbVcFQj) team and requires [RAGE Multiplayer v1.1](https://rage.mp/).
+This resource is created and maintained by the [Project Unknown](https://discord.gg/3sqHSzy) team and requires [RAGE Multiplayer v1.1](https://rage.mp/).
 
 ## Features:
 - Server
