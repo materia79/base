@@ -8,5 +8,6 @@ module.exports = {
     player.ban("Console");
     return " Player " + player.name + " was banned!";
   },
-  help: `    ban <id>                  - ban a player\n`
+  help: `ban <id>                  - ban a player\n`,
+  group: "Admin"
 }

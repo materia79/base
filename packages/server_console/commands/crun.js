@@ -1,5 +1,5 @@
 module.exports = {
-  cmd: (args) => {
+  cmd: (ctx, args) => {
     args.shift();
     if (args.length == 0 || args[0] == "") return "\nUsage: crun <userid> <code>";
     let targetPlayer = args[0] >= 0 ? mp.players.at(args[0]) : false;
@@ -9,5 +9,6 @@ module.exports = {
     }
     return "\nCould not find player " + args[0];
   },
-  help: `    crun <player id> <code>   - execute clientside code\n`
+  help: `crun <player id> <code>   - execute clientside code\n`,
+  group: "Developer"
 }

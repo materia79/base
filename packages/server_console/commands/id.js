@@ -22,7 +22,7 @@ function getPlayerInfo(player) {
 };
 
 module.exports = {
-  cmd: (args) => {
+  cmd: (ctx, args) => {
     let res = `Player ` + (args.length == 2 ? "found" : "connected") + `:\n`;
 
     if (args.length == 2) {
@@ -47,5 +47,6 @@ module.exports = {
 
     return res;
   },
-  help: `    id <id or part of name>   - show more details about players\n`
+  help: `id <id or part of name>   - show more details about players\n`,
+  group: "Admin"
 }

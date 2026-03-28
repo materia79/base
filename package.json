@@ -1,0 +1,6 @@
+{
+  "name": "base",
+  "dependencies": {
+    "neo-blessed": "^0.2.0"
+  }
+}

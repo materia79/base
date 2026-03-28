@@ -1,0 +1,14 @@
+{
+  "titleEnabled": true,
+  "wordWrapEnabled": true,
+  "timestampsEnabled": true,
+  "mouseCaptureEnabled": true,
+  "afkEnabled": true,
+  "variabled": {
+    "title": "RAGE:MP server",
+    "afkTimeoutSeconds": "300",
+    "refreshIntervalMs": "1000",
+    "afkRefreshIntervalMs": "10000"
+  },
+  "embeddingExecutable": "ragemp-server.exe"
+}

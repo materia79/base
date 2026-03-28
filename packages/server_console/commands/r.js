@@ -1,3 +1,6 @@
+// Helper functions for debugging via this command go here.
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 const
   getAsyncScript = (script) => {
     return `
@@ -5,10 +8,8 @@ const
   try {
     let _f = async function() { ` + script + ` };
     let _res = await _f();
-    await wait(50);
     console.log("[run(async)] Result: ".concat(typeof _res == "object" ? JSON.stringify(_res) : _res));
   } catch (error) {
-    await wait(50);
     console.log("[run(async)] Error in clientside script: " + error);
   }
 })();`;
@@ -27,9 +28,9 @@ const
   };
 
 module.exports = {
-  cmd: (args) => {
+  cmd: (ctx, args) => {
     args.shift();
-    if (args.length < 1) return "Usage: `r <serverside code>`";
+    if (args.length < 1) return "Usage: r <serverside code>";
     const
       code = args.join(" "),
       isAsync = code.indexOf("await") >= 0;
@@ -39,6 +40,9 @@ module.exports = {
     } else {
       eval(getScript(code));
     }
+
+    return "Script executed.";
   },
-  help: `    r <server side code>      - run serverside code (supports async await)\n`
-}
+  help: "r <server side code>       - run serverside code (supports async await)",
+  group: "Developer"
+};

@@ -1,5 +1,5 @@
 module.exports = {
-  cmd: (args) => {
+  cmd: (ctx, args) => {
     args.shift();
     var text = args.join(" ");
 
@@ -13,5 +13,6 @@ module.exports = {
       mp.players.call(mp.arenas[chatFocus].players, "pc", [1, -1, text]);
     }
   },
-  help: `    say                       - say something\n`
+  help: `say                       - say something\n`,
+  group: "Admin"
 }

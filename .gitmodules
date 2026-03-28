@@ -1,0 +1,3 @@
+[submodule "packages/server_console/tty"]
+	path = packages/server_console/tty
+	url = https://github.com/materia79/tty

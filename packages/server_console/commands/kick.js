@@ -1,5 +1,5 @@
 module.exports = {
-  cmd: (args) => {
+  cmd: (ctx, args) => {
     args.shift();
     if (args.length == 0) return "Usage: `kick <id>`";
     let player = mp.players.at(args[0]);
@@ -8,5 +8,6 @@ module.exports = {
     player.kick("Console");
     return "Player `" + player.name + "` was kicked!";
   },
-  help: `    kick <id>                 - kick a player\n`
+  help: `kick <id>                 - kick a player\n`,
+  group: "Admin"
 }

@@ -1,6 +1,10 @@
 module.exports = {
-  cmd: () => {
-    return mp.tty.help;
+  cmd: (ctx) => {
+    if (!ctx.tty.help || ctx.tty.help.length === 0) {
+      return "No commands loaded.";
+    }
+
+    return `Built-in commands:\n${ctx.tty.help}`;
   },
-  help: `    help                      - show this\n`
-}
+  help: "help                       - show this"
+};

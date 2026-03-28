@@ -1,5 +1,5 @@
 module.exports = {
-  cmd: (args) => {
+  cmd: (ctx, args) => {
     if (typeof mp.arenas == "undefined") return console.log("No arena manager detected. Global chat available only!");
     args.shift();
     var gm_id = args.join(" ");
@@ -17,5 +17,6 @@ module.exports = {
     mp.tty.chatFocus = gm_id;
     console.log("Changed chat focus to " + mp.arenas[gm_id].name);
   },
-  help: (typeof mp.arenas != "undefined" ? `    focus                     - set target gamemode for \`say\`` : ``)
+  help: (typeof mp.arenas != "undefined" ? `focus                     - set target gamemode for \`say\`` : ``),
+  group: "Admin"
 }
