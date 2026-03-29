@@ -31,3 +31,5 @@ node_modules/
 package-lock.json
 yarn-error.log
 yarn.lock
+ragemp-server_stdout.log
+console_history.json
