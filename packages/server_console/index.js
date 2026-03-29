@@ -1,11 +1,8 @@
-//throw new Error("debug test error message.");
-require("./tty/index.js");
-
 // Init mp.tty
 const { Console } = require("./tty/index.js");
 
 const consoleRuntime = new Console({
-  commandsDir: process.cwd() + "/packages/server_console/commands",
+  commandsDir: process.cwd() + "/modules/base/packages/server_console/commands",
   titleEnabled: true,
   wordWrapEnabled: true
 }).start();
