@@ -1,8 +1,15 @@
 // Init mp.tty
+const fs = require("fs");
 const { Console } = require("./tty/index.js");
 
+const rootCommandsDir = process.cwd() + "/commands/";
+const fallbackCommandsDir = process.cwd() + "/modules/base/packages/server_console/commands";
+const commandsDir = fs.existsSync(rootCommandsDir) && fs.statSync(rootCommandsDir).isDirectory()
+  ? rootCommandsDir
+  : fallbackCommandsDir;
+
 const consoleRuntime = new Console({
-  commandsDir: process.cwd() + "/modules/base/packages/server_console/commands",
+  commandsDir,
   titleEnabled: true,
   wordWrapEnabled: true
 }).start();
