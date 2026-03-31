@@ -1,5 +1,8 @@
 {
   "name": "base",
+  "scripts": {
+    "start": "node packages/server_console/tty/index.js"
+  },
   "dependencies": {
     "neo-blessed": "^0.2.0"
   }
