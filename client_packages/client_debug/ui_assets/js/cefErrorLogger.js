@@ -1,15 +1,56 @@
-mp.log = (text) => {
-  mp.trigger("log", text);
+const getCefSourceName = () => {
+  try {
+    return document.location.href.split('/').pop();
+  } catch (error) {
+    return 'unknown_cef';
+  }
+};
+
+const formatCefLogValue = (value) => {
+  if (typeof value == "string") return value;
+  if (value instanceof Error) return value.stack || value.message || String(value);
+  try {
+    return JSON.stringify(value);
+  } catch (error) {
+    return String(value);
+  }
+};
+
+const emitCefLog = (...args) => {
+  try {
+    mp.trigger("log", args.map(formatCefLogValue).join(" "));
+  } catch (error) {
+    // Intentionally swallow logging failures inside CEF error logging.
+  }
+};
+
+mp.log = (...args) => {
+  emitCefLog(...args);
 };
 
 console.log_orig = console.log;
-console.log = (text) => {
-  mp.trigger("log", "[CEF(" + document.location.href.split('/').pop() + ")] " + text);
+console.warn_orig = console.warn ? console.warn.bind(console) : console.log;
+console.error_orig = console.error ? console.error.bind(console) : console.log;
+console.log = (...args) => {
+  emitCefLog("[CEF(" + getCefSourceName() + ")]", ...args);
+};
+console.warn = (...args) => {
+  emitCefLog("[CEF(" + getCefSourceName() + ")] [warn]", ...args);
+};
+console.error = (...args) => {
+  emitCefLog("[CEF(" + getCefSourceName() + ")] [error]", ...args);
 };
 
 window.onerror = function (message, source, lineno, colno, error) {
-  mp.log("[CEF(" + source.split('/').pop() + ")] " + message + "\nSource: " + source + "\nLine|col: " + lineno + "|" + colno + "\nError: " + error.stack);
+  const sourceName = (source && source.split ? source.split('/').pop() : getCefSourceName());
+  const stack = (error && error.stack ? error.stack : error);
+  mp.log("[CEF(" + sourceName + ")] " + message + "\nSource: " + source + "\nLine|col: " + lineno + "|" + colno + "\nError: " + stack);
 };
+
+window.addEventListener("unhandledrejection", function (event) {
+  const reason = (event && event.reason && event.reason.stack ? event.reason.stack : event && event.reason ? event.reason : "unknown rejection");
+  mp.log("[CEF(" + getCefSourceName() + ")] Unhandled promise rejection: " + reason);
+});
 
 class EventMerger {
   constructor(handler, minBufferTimeMs = 250, maxBufferTimeMs = 3000) {
